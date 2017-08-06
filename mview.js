@@ -62,11 +62,13 @@ XRay.prototype.onLoadData = function(data){
 	this.frame = this.frames[this.frameIndex];
 	this.colorsArr = [];
 	this.frames.forEach(function(frame){
-		var colors = [];
-		frame.point_arr.forEach(function(point){
-			colors.push(new THREE.Color(point.color));
-		});
-		self.colorsArr.push(colors);
+		if(typeof(this.frame.point_arr)!='undefined'){
+			var colors = [];
+			frame.point_arr.forEach(function(point){
+				colors.push(new THREE.Color(point.color));
+			});
+			self.colorsArr.push(colors);
+		}
 	});
 	this.log('colors arr end');
 
