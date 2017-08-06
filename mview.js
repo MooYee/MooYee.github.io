@@ -393,7 +393,7 @@ XRay.prototype.initThree = function(){
 		geometry.vertices.push(p1);
 		geometry.vertices.push(p2);
 		geometry.colors.push( color1, color2 );
-		var line = new THREE.Line( geometry, material, THREE.LinePieces );
+		var line = new THREE.Line( geometry, material, THREE.LineSegments);
 		self.scene.add(line);
 	});
 
