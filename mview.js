@@ -57,6 +57,7 @@ XRay.prototype.onLoadData = function(data){
 		this.frames = [data];
 	}
 	
+	this.log('frame number:' + this.frames.length);
 	this.frameIndex = 0;
 	this.frame = this.frames[this.frameIndex];
 	this.colorsArr = [];
@@ -67,6 +68,7 @@ XRay.prototype.onLoadData = function(data){
 		});
 		self.colorsArr.push(colors);
 	});
+	this.log('colors arr end');
 
 	this.lastTime = new Date().getTime();
 
