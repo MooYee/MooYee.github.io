@@ -2,10 +2,6 @@ function XRay(){
 	this.withFloor = false;
 	this.withAxes = true;
 	this.pointType = 'point';
-	this.points = [];
-	this.tris = [];
-	this.lines = [];
-	this.markers = [];
 
 	this.mx = -1;
 	this.my = -1;
@@ -73,7 +69,7 @@ XRay.prototype.onLoadData = function(data){
 	});
 
 	this.lastTime = new Date().getTime();
-	
+
 	this.exchangeXYZ();
 	this.getMaxXYZ();
 	this.initThree();
@@ -152,6 +148,7 @@ XRay.prototype.forEachAllPoint = function(cbk){
 
 
 XRay.prototype.exchangeXYZ = function(){
+	this.log('exchange xyz');
 	var self = this;
 	this.forEachAllPoint(function(point){
 		// 交换 rhino 和 Three.js 的坐标系
@@ -166,6 +163,7 @@ XRay.prototype.exchangeXYZ = function(){
 
 
 XRay.prototype.getMaxXYZ = function(){
+	this.log('get max xyz');
 	var self = this;
 
 	this.forEachAllPoint(function(point){
@@ -259,6 +257,7 @@ XRay.prototype.makeTextSprite = function( message, parameters ){
 }
 
 XRay.prototype.initThree = function(){
+	this.log('init three');
 	var self = this;
 	this.scene = new THREE.Scene();
 
@@ -343,6 +342,7 @@ XRay.prototype.initThree = function(){
 	// most objects displayed are a "mesh":
 	//  a collection of points ("geometry") and
 	//  a set of surface parameters ("material")
+	this.log('points cloud');
 	this.pointsCloud = new THREE.Geometry();
 	this.forEachPoint(function(point){
 		var vertex = new THREE.Vector3();
@@ -359,6 +359,7 @@ XRay.prototype.initThree = function(){
 	var particles = new THREE.Points(this.pointsCloud, material );
 	this.scene.add(particles );
 
+	this.log('tri');
 	this.forEachTri(function(tri){
 		var p1 = new THREE.Vector3(tri.ps[0].x, tri.ps[0].y, tri.ps[0].z);
 		var p2 = new THREE.Vector3(tri.ps[1].x, tri.ps[1].y, tri.ps[1].z);
@@ -378,6 +379,7 @@ XRay.prototype.initThree = function(){
 		self.scene.add(mesh);
 	});
 
+	this.log('line')
 	this.forEachLine(function(line){
 		var geometry = new THREE.Geometry();
 		var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
@@ -399,6 +401,7 @@ XRay.prototype.initThree = function(){
 	//        });
 	//	}
 
+	this.log('marker');
 	this.forEachMarker(function(marker){
 		var rr = (marker.color >> 16) & 0xff;
 		var gg = (marker.color >> 8) & 0xff;
@@ -410,6 +413,7 @@ XRay.prototype.initThree = function(){
 	});
 
 	if(this.withAxes){
+		this.log('axes');
 		// create a set of coordinate axes to help orient user
 		//    specify length in pixels in each direction
 		var axes = new THREE.AxisHelper(self.mm*this.mscale);
@@ -417,6 +421,7 @@ XRay.prototype.initThree = function(){
 	}
 
 	if(this.withFloor){
+		this.log('floor');
 		// note: 4x4 checkboard pattern scaled so that each square is 25 by 25 pixels.
 		var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
 		floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
