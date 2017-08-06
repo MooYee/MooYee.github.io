@@ -62,7 +62,7 @@ XRay.prototype.onLoadData = function(data){
 	this.frame = this.frames[this.frameIndex];
 	this.colorsArr = [];
 	this.frames.forEach(function(frame){
-		if(typeof(this.frame.point_arr)!='undefined'){
+		if(typeof(frame.point_arr)!='undefined'){
 			var colors = [];
 			frame.point_arr.forEach(function(point){
 				colors.push(new THREE.Color(point.color));
