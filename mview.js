@@ -394,6 +394,7 @@ XRay.prototype.initThree = function(){
 		geometry.vertices.push(p2);
 		geometry.colors.push( color1, color2 );
 		var line = new THREE.Line( geometry, material, THREE.LineSegments);
+		self.log('add line:'+line);
 		self.scene.add(line);
 	});
 
@@ -413,6 +414,7 @@ XRay.prototype.initThree = function(){
 		var s = self.makeTextSprite(""+marker.count,
 		{fontSize: 24, borderColor: {r:0, g:0, b:0xff, a:1.0}, backgroundColor: {r:rr, g:gg, b:bb, a:0.8} } );
 		s.position.set(marker.x, marker.y, marker.z);
+		self.log('add marker:'+marker);
 		self.scene.add( s );
 	});
 
