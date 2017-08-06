@@ -97,6 +97,7 @@ XRay.prototype.init = function(){
 };
 
 XRay.prototype.forEachPoint = function(cbk){
+	this.log('for each point');
 	if(typeof(this.frame.point_arr)!='undefined'){
 		this.frame.point_arr.forEach(cbk);
 	}
@@ -109,6 +110,7 @@ XRay.prototype.forEachTri = function(cbk){
 };
 
 XRay.prototype.forEachTriPoint = function(cbk){
+	this.log('for each tri point');
 	this.forEachTri(function(tri){
 		var i;
 		for(i = 0; i < 3; i++){
@@ -119,14 +121,15 @@ XRay.prototype.forEachTriPoint = function(cbk){
 };
 
 XRay.prototype.forEachLine = function(cbk){
-	this.log('line number:' + this.frame.line_arr.length);
 	if(typeof(this.frame.line_arr)!='undefined'){
+		this.log('line number:' + this.frame.line_arr.length);
 		this.frame.line_arr.forEach(cbk);
 	}
 }
 
 
 XRay.prototype.forEachLinePoint = function(cbk){
+	this.log('for each line point');
 	this.forEachLine(function(line){
 		cbk(line.start);
 		cbk(line.end);
@@ -140,6 +143,7 @@ XRay.prototype.forEachMarker = function(cbk){
 }
 
 XRay.prototype.forEachMarkPoint = function(cbk){
+	this.log('for each marker point');
 	this.forEachMarker(function(marker){
 		cbk(marker);
 	});
