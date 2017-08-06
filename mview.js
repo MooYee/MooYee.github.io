@@ -35,6 +35,7 @@ XRay.prototype.getUrlParam = function(name) {
 
 XRay.prototype.nextFrame = function(){
 	if(this.frames.length == 1){
+		this.log('only one frame');
 		return;
 	}
 	this.frameIndex++;
@@ -118,6 +119,7 @@ XRay.prototype.forEachTriPoint = function(cbk){
 };
 
 XRay.prototype.forEachLine = function(cbk){
+	this.log('line number:' + this.frame.line_arr.length);
 	if(typeof(this.frame.line_arr)!='undefined'){
 		this.frame.line_arr.forEach(cbk);
 	}
@@ -208,6 +210,7 @@ XRay.prototype.roundRect = function (ctx, x, y, w, h, r) {
 
 XRay.prototype.makeTextSprite = function( message, parameters ){
 	var self = this;
+	self.log('mark sprite');
 	if ( parameters === undefined ) parameters = {};
 
 	var fontface = parameters.hasOwnProperty("fontface") ?
@@ -225,8 +228,8 @@ XRay.prototype.makeTextSprite = function( message, parameters ){
 	var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
 	parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
 
-	var spriteAlignment = THREE.SpriteAlignment.topLeft;
 
+	self.log('before canvas');
 	var canvas = document.createElement('canvas');
 	var context = canvas.getContext('2d');
 	context.font = "Bold " + fontsize + "px " + fontface;
@@ -242,6 +245,7 @@ XRay.prototype.makeTextSprite = function( message, parameters ){
 	context.lineWidth = borderThickness;
 	this.roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
 
+	self.log('before fill');
 	// 1.4 is extra height factor for text below baseline: g,j,p,q.
 	// text color
 	context.fillStyle = "rgba(0, 0, 0, 1.0)";
@@ -251,8 +255,9 @@ XRay.prototype.makeTextSprite = function( message, parameters ){
 	var texture = new THREE.Texture(canvas)
 	texture.needsUpdate = true;
 
+	self.log('before sprite material');
 	var spriteMaterial = new THREE.SpriteMaterial(
-	{ map: texture, useScreenCoordinates: false, alignment: spriteAlignment } );
+	{ map: texture, useScreenCoordinates: false } );
 	var sprite = new THREE.Sprite( spriteMaterial );
 	var scale = 1.0 * self.mm * 24 / 1280 * 20000/800;
 	self.log(scale);
@@ -394,7 +399,7 @@ XRay.prototype.initThree = function(){
 		geometry.vertices.push(p2);
 		geometry.colors.push( color1, color2 );
 		var line = new THREE.Line( geometry, material, THREE.LineSegments);
-		self.log('add line:'+line);
+		self.log('add line2:'+line);
 		self.scene.add(line);
 	});
 
@@ -408,11 +413,13 @@ XRay.prototype.initThree = function(){
 
 	this.log('marker');
 	this.forEachMarker(function(marker){
+		self.log('add marker:' + marker);
 		var rr = (marker.color >> 16) & 0xff;
 		var gg = (marker.color >> 8) & 0xff;
 		var bb = (marker.color) & 0xff;
 		var s = self.makeTextSprite(""+marker.count,
 		{fontSize: 24, borderColor: {r:0, g:0, b:0xff, a:1.0}, backgroundColor: {r:rr, g:gg, b:bb, a:0.8} } );
+		self.log('s:' + s);
 		s.position.set(marker.x, marker.y, marker.z);
 		self.log('add marker:'+marker);
 		self.scene.add( s );
@@ -440,6 +447,7 @@ XRay.prototype.initThree = function(){
 		floor.rotation.x = Math.PI / 2;
 		self.scene.add(floor);
 	}
+	this.log('after init');
 }
 
 
