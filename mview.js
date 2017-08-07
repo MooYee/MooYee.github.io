@@ -196,77 +196,205 @@ XRay.prototype.getMaxXYZ = function(){
 };
 
 
-XRay.prototype.roundRect = function (ctx, x, y, w, h, r) {
-	ctx.beginPath();
-	ctx.moveTo(x+r, y);
-	ctx.lineTo(x+w-r, y);
-	ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-	ctx.lineTo(x+w, y+h-r);
-	ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-	ctx.lineTo(x+r, y+h);
-	ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-	ctx.lineTo(x, y+r);
-	ctx.quadraticCurveTo(x, y, x+r, y);
-	ctx.closePath();
-	ctx.fill();
-	//ctx.stroke();
-};
+XRay.prototype.toBinaryInt = function(num) {
+    /**
+     * @author fernandosavio
+     * http://stackoverflow.com/a/16155417/1763602
+     */
 
-XRay.prototype.makeTextSprite = function( message, parameters ){
-	var self = this;
-	self.log('mark sprite');
-	if ( parameters === undefined ) parameters = {};
+    "use strict";
 
-	var fontface = parameters.hasOwnProperty("fontface") ?
-	parameters["fontface"] : "Arial";
-
-	var fontsize = parameters.hasOwnProperty("fontsize") ?
-	parameters["fontsize"] : 18;
-
-	var borderThickness = parameters.hasOwnProperty("borderThickness") ?
-	parameters["borderThickness"] : 4;
-
-	var borderColor = parameters.hasOwnProperty("borderColor") ?
-	parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
-
-	var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
-	parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+    return (num >>> 0).toString(2);  // jshint ignore:line
+}
 
 
-	self.log('before canvas');
-	var canvas = document.createElement('canvas');
-	var context = canvas.getContext('2d');
-	context.font = "Bold " + fontsize + "px " + fontface;
-	// get size data (height depends only on font size)
-	var metrics = context.measureText( message );
-	var textWidth = metrics.width;
-	// background color
-	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
-	+ backgroundColor.b + "," + backgroundColor.a + ")";
-	// border color
-	context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
-	+ borderColor.b + "," + borderColor.a + ")";
-	context.lineWidth = borderThickness;
-	this.roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+XRay.prototype.getNextPowerOfTwo = function(num) {
+    /**
+     *  @author Marco Sulla (marcosullaroma@gmail.com)
+     *  @date Feb 17, 2016
+     */
 
-	self.log('before fill');
-	// 1.4 is extra height factor for text below baseline: g,j,p,q.
-	// text color
-	context.fillStyle = "rgba(0, 0, 0, 1.0)";
+    "use strict";
 
-	context.fillText( message, borderThickness, fontsize + borderThickness);
-	// canvas contents will be used for a texture
-	var texture = new THREE.Texture(canvas)
-	texture.needsUpdate = true;
+    if (num < 0) {
+        throw new Error("Argument must be positive");
+    }
 
-	self.log('before sprite material');
-	var spriteMaterial = new THREE.SpriteMaterial(
-	{ map: texture, useScreenCoordinates: false } );
-	var sprite = new THREE.Sprite( spriteMaterial );
-	var scale = 1.0 * self.mm * 24 / 1280 * 20000/800;
-	self.log(scale);
-	sprite.scale.set(scale,scale,scale);
-	return sprite;
+    var bin_str = this.toBinaryInt(num - 1);
+
+    if (bin_str.indexOf("0") < 0 || bin_str === "0") {
+        return num;
+    }
+    else {
+        return Math.pow(2, bin_str.length);
+    }
+}
+
+XRay.prototype.adaptCanvasToText = function(canvas, message, font_size, font_face) {
+    /**
+     *  @author Marco Sulla (marcosullaroma@gmail.com)
+     *  @date Feb 17, 2016
+     */
+
+    "use strict";
+
+    var context = canvas.getContext('2d');
+
+    if (canvas.height > canvas.width) {
+        canvas.width = canvas.height;
+    }
+
+
+    while (true) {
+        var side = this.getNextPowerOfTwo(canvas.width);
+
+        if (side < 128) {
+            side = 128;
+        }
+
+        canvas.width = canvas.height = side;
+
+        context.font = "Bold " + font_size + "pt " + font_face;
+
+        var metrics = context.measureText(message);
+        var text_width = metrics.width;
+        var text_side = this.getNextPowerOfTwo(Math.max(text_width, font_size));
+
+        if (text_side >= 128) {
+            if (side !== text_side) {
+                canvas.width = text_side;
+                continue;
+            }
+        }
+        else if (side !== 128) {
+            canvas.width = 128;
+            continue;
+        }
+
+        break;
+    }
+}
+
+
+XRay.prototype.makeTextSprite = function(message, opts) {  // jshint ignore:line
+    /**
+     *  @author Lee Stemkoski
+     *  @author Marco Sulla (marcosullaroma@gmail.com)
+     *  
+     *  https://stemkoski.github.io/Three.js/Sprite-Text-Labels.html
+     *  
+     */
+
+    "use strict";
+
+    if ( opts === undefined ) {
+        opts = {};
+    }
+
+    var possible_opts = ["font_face", "font_size", "border_thickness", 
+                         "border_color", "background_color", "text_color"];
+
+    for (var k in opts) {
+        if (opts.hasOwnProperty(k)) {
+            if (possible_opts.indexOf(k) < 0) {
+                throw new Error("Unknown option '" + k.toString() + "'");
+            }
+        }
+    }
+
+	
+    if (opts["font_face"] === undefined) {
+        opts["font_face"] = "Arial";
+    }
+
+    if (opts["font_size"] === undefined) {
+        opts["font_size"] = 100;
+    }
+
+    var font_size = opts["font_size"];
+
+    if (font_size <= 0) {
+        throw new Error("'font_size' must be a positive number");
+    }
+
+    if (opts["border_thickness"] === undefined) {
+        opts["border_thickness"] = 0;
+    }
+    
+
+    if (opts["border_thickness"] < 0) {
+        throw new Error("'border_thickness' must be >= 0");
+    }
+
+    if (opts["border_color"] === undefined) {
+        opts["border_color"] = { r:0, g:0, b:0, a:1.0 };
+    }
+
+    if (opts["background_color"] === undefined) {
+        opts["background_color"] = { r:255, g:255, b:255, a:1.0 };
+    }
+
+    if (opts["text_color"] === undefined) {
+        opts["text_color"] = { r: 0, g: 0, b: 0, a: 1 };
+    }
+
+
+    var border_color = opts["border_color"];
+    var background_color = opts["background_color"];
+    var text_color = opts["text_color"];
+
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+
+    this.adaptCanvasToText(canvas, message, font_size, opts["font_face"]);
+
+    var scale;
+
+    if (canvas.width > 128) {
+        scale = canvas.width / 128;
+    }
+    
+    // background color
+    context.fillStyle   = ("rgba(" + background_color.r + "," + 
+                           background_color.g + "," + background_color.b + "," + 
+                           background_color.a + ")");
+	this.log('fill style:'+context.fillStyle);
+    // border color
+    context.strokeStyle = ("rgba(" + border_color.r + "," + border_color.g + 
+                           "," + border_color.b + "," + border_color.a + ")");
+
+    context.lineWidth = opts["border_thickness"];
+    // 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+    // text color
+    context.fillStyle = ("rgba(" + text_color.r + "," + text_color.g + 
+                           "," + text_color.b + "," + text_color.a + ")");
+
+    var metrics = context.measureText( message );
+    var text_width = metrics.width;
+
+    console.log(text_width);
+
+    context.fillText( message, (canvas.width - text_width) / 2, canvas.height / 2 + font_size / 2);
+
+    // canvas contents will be used for a texture
+    var texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+
+    var spriteMaterial;
+
+	spriteMaterial = new THREE.SpriteMaterial({map: texture});
+
+    var sprite = new THREE.Sprite(spriteMaterial);
+
+	scale = 15000;
+    if (scale) {
+        sprite.scale.set(scale, scale, 1);
+    }
+
+	this.log('sprite:' + sprite);
+	this.log('width:' + canvas.width);
+    return sprite;  
 }
 
 XRay.prototype.initThree = function(){
@@ -368,7 +496,9 @@ XRay.prototype.initThree = function(){
 		size: 1000,
 		vertexColors: true,
 	});
-	this.pointsCloud.colors = this.colorsArr[this.frameIndex];
+	if(this.colorsArr.length > 0){
+		this.pointsCloud.colors = this.colorsArr[this.frameIndex];
+	}
 	var particles = new THREE.Points(this.pointsCloud, material );
 	this.scene.add(particles );
 
@@ -396,7 +526,7 @@ XRay.prototype.initThree = function(){
 	this.forEachLine(function(line){
 		var geometry = new THREE.Geometry();
 		var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
-		var color1 = new THREE.Color( 0 ), color2 = new THREE.Color( 0 );
+		var color1 = new THREE.Color( 0xffffff ), color2 = new THREE.Color( 0xffffff );
 		var p1 = new THREE.Vector3(line.start.x, line.start.y, line.start.z);
 		var p2 = new THREE.Vector3(line.end.x, line.end.y, line.end.z);
 		geometry.vertices.push(p1);
@@ -421,8 +551,13 @@ XRay.prototype.initThree = function(){
 		var rr = (marker.color >> 16) & 0xff;
 		var gg = (marker.color >> 8) & 0xff;
 		var bb = (marker.color) & 0xff;
-		var s = self.makeTextSprite(""+marker.count,
-		{fontSize: 24, borderColor: {r:0, g:0, b:0xff, a:1.0}, backgroundColor: {r:rr, g:gg, b:bb, a:0.8} } );
+		var s = self.makeTextSprite(""+marker.count, {
+			font_size: 24, 
+			border_color: {r:0, g:0, b:0xff, a:1.0},
+			text_color: {r:0xff, g:0xff, b:0xff, a:1.0},
+			background_color: {r:rr, g:gg, b:bb, a:1.0} ,
+			border_thickness:1
+		} );
 		self.log('s:' + s);
 		s.position.set(marker.x, marker.y, marker.z);
 		self.log('add marker:'+marker);
