@@ -21,11 +21,26 @@
 }
 
 .footer-section-title{
-	font-weight: bold;
-	font-size:large;
+    color: #767d80;
+    font-weight: 700;
+}
+
+.footer-list {
+	padding: 0;
+    list-style-type: none;
+    margin: 4px 0 0;
+}
+
+.footer-list-item {
+    line-height: 1.5;
+}
+
+.footer-list-item a{
+    color: #949fa2;
 }
 
 .copyright {
+	margin-top: 20px;
 	color: gray;
 	text-align: right;
 }
