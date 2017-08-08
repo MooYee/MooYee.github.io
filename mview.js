@@ -554,8 +554,7 @@ XRay.prototype.initThree = function(){
 		var s = self.makeTextSprite(""+marker.count, {
 			font_size: 24, 
 			border_color: {r:0, g:0, b:0xff, a:1.0},
-			text_color: {r:0xff, g:0xff, b:0xff, a:1.0},
-			background_color: {r:rr, g:gg, b:bb, a:1.0} ,
+			text_color: {r:rr, g:gg, b:bb, a:1.0},
 			border_thickness:1
 		} );
 		self.log('s:' + s);
