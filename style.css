@@ -1,4 +1,4 @@
-.my-slide {
+.ds-slide {
 	height: 500px;
 	background: lightgray;
 	display: table-cell;
@@ -9,12 +9,12 @@
 	font-weight: bold;
 }
 
-.my-slide table{
+.ds-slide table{
 	width: 100%;
 	height: 100%;
 }
 
-.my-mark{
+.ds-mark{
 	color: blue;
 	font-size: 32px;
 	font-family: Comic Sans MS;
@@ -60,4 +60,23 @@
 
 .header-item-first {
     border-left: none;
+}
+
+.ds-about p {
+	text-indent: 2em;
+	padding-top: 1em;
+	font-size: large;
+	text-align: justify;
+}
+
+.ds-algorithm p {
+	text-indent: 2em;
+	padding-top: 1em;
+	font-size: large;
+	text-align: justify;
+}
+
+.ds-algorithm h1{
+	border-bottom: 1px solid gray;
+	margin-top: 2em;
 }
