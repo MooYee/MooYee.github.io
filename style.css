@@ -46,11 +46,18 @@
 	font-size: 0.5em;
 }
 
-.header-item {
-	padding: 0px;
-	margin: 60px 0px 0px;
+.header-list {
+	margin-top: 60px;
+	text-align: right;
 }
 
-.header-item a{
+.header-item {
     color: #949fa2;
+    padding-right: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #cccccc;
+}
+
+.header-item-first {
+    border-left: none;
 }
