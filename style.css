@@ -76,7 +76,7 @@
 	text-align: justify;
 }
 
-.ds-algorithm h1{
+.ds-algorithm h1, .ds-about h1{
 	border-bottom: 1px solid gray;
 	margin-top: 2em;
 }
