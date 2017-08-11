@@ -1,123 +1,123 @@
 <div class='container ds-algorithm'>
-	<div class='ds-section'>
-		<h1>
-			创新算法 － View in 和 View out
-		</h1> 
-		
-		<p>
-			(对应模型为 test-20170810-01.3dm)
-		</p>
-		
-		<p>
-			在 DepthMap 那个阶段，曾经有 Visual Connectivity 的概念。就是考察点与点之间，是否被物体隔开。没有隔开的话，认为是视线可见。DepthMap 是二维空间分析，没什么意思。
-		</p>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － View in 和 View out
+	</h1> 
+	
+	<p>
+	  (对应模型为 test-20170810-01.3dm)
+	</p>
+	
+	<p>
+	  在 DepthMap 那个阶段，曾经有 Visual Connectivity 的概念。就是考察点与点之间，是否被物体隔开。没有隔开的话，认为是视线可见。DepthMap 是二维空间分析，没什么意思。
+	</p>
 
-		<p>
-			后来日本那边有人写了论文，提出了 View and Viewed Analysis，尝试往三维空间分析的方向发展，但那个论文只有 paper 没有软件，数据怎么来的，也验证不了。看着来气。
-		</p>
-		
-		<p>
-			后来，2016 年春节前后，深圳大学王浩锋教授，联合美国的 Piponis 教授，提出，把建筑空间，分为 occupied space，和 observed space 两类。我觉得这种叫法确实更好一点，在新版的空间句法简明教程中，对这种概念进行了剖析。
-		</p>
+	<p>
+	  后来日本那边有人写了论文，提出了 View and Viewed Analysis，尝试往三维空间分析的方向发展，但那个论文只有 paper 没有软件，数据怎么来的，也验证不了。看着来气。
+	</p>
+	
+	<p>
+	  后来，2016 年春节前后，深圳大学王浩锋教授，联合美国的 Piponis 教授，提出，把建筑空间，分为 occupied space，和 observed space 两类。我觉得这种叫法确实更好一点，在新版的空间句法简明教程中，对这种概念进行了剖析。
+	</p>
 
-		<p>
-			在这些前期工作的基础上，在 DepthSapce 当中，我决定转而使用 Reach-able Space 和 Boundary Representation两个概念。Reach-able Space就是人可以到达的空间。Boundary Representation 是计算机科学当中的术语，Grasshopper 中，不是有个电池叫 Brep 吗，就是这个 Boundary Representation 的缩写，就是代表可以被看到的物体。
-		</p>
+	<p>
+	  在这些前期工作的基础上，在 DepthSapce 当中，我决定转而使用 Reach-able Space 和 Boundary Representation两个概念。Reach-able Space就是人可以到达的空间。Boundary Representation 是计算机科学当中的术语，Grasshopper 中，不是有个电池叫 Brep 吗，就是这个 Boundary Representation 的缩写，就是代表可以被看到的物体。
+	</p>
 
-		<p>
-			建筑师可以在空间中布置点阵，REAS 点表示人可以到达的空间。BREP 点表示只能被看却无法到达的空间。如公园当中，人行道上的点可以被定义为 REAS 点，人行道旁边有个湖面，湖面上可以布置 BREP 点。
-		</p>
+	<p>
+	  建筑师可以在空间中布置点阵，REAS 点表示人可以到达的空间。BREP 点表示只能被看却无法到达的空间。如公园当中，人行道上的点可以被定义为 REAS 点，人行道旁边有个湖面，湖面上可以布置 BREP 点。
+	</p>
 
-		<p>
-			只有 REAS 点可以发出视线。REAS 点和 BREP 点都可以接收视线。
-		</p>
+	<p>
+	  只有 REAS 点可以发出视线。REAS 点和 BREP 点都可以接收视线。
+	</p>
 
-		<p>
-			在此基础上就可以进行视线分析了。
-		</p>
+	<p>
+	  在此基础上就可以进行视线分析了。
+	</p>
 
-		<p>
-			由于要考虑半透明物体的遮挡的问题，每个视线权重为 100，被半透明物体遮挡后，权重值下降。
-		</p>
+	<p>
+	  由于要考虑半透明物体的遮挡的问题，每个视线权重为 100，被半透明物体遮挡后，权重值下降。
+	</p>
 
-		<p>
-			一条视线，是有方向的，起点与终点都可以从这条线继承权重值。假设全局计算结束后，一条视线的权重值为 65，那么这条视线的起点，它的 View out degree 属性，也就是 vod值，就加上 65。这条视线的终点，它的 View in degree 属性，也就是 vid 值，也加上 65。由于 REAS 点和 BREP 点是分开定义的，那么 vid 值和 vod 值就有了精确的建筑学的意义。
-		</p>
+	<p>
+	  一条视线，是有方向的，起点与终点都可以从这条线继承权重值。假设全局计算结束后，一条视线的权重值为 65，那么这条视线的起点，它的 View out degree 属性，也就是 vod值，就加上 65。这条视线的终点，它的 View in degree 属性，也就是 vid 值，也加上 65。由于 REAS 点和 BREP 点是分开定义的，那么 vid 值和 vod 值就有了精确的建筑学的意义。
+	</p>
 
-		<p>
-			（点击下图查看 vid 示例）
-		</p>
+	<p>
+	  （点击下图查看 vid 示例）
+	</p>
 
-		<p>
-			（点击下图查看 vod 示例）
-		</p>
-	</div>
+	<p>
+	  （点击下图查看 vod 示例）
+	</p>
+  </div>
 
-	<div class='ds-section'>
-		<h1>
-			创新算法 － Topological Shortest Path
-		</h1>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － Topological Shortest Path
+	</h1>
 
-		<p>
-			扑意义上的最短路径。只有 REAS 点参与最短拓扑路径的分析。
-		</p>
+	<p>
+	  扑意义上的最短路径。只有 REAS 点参与最短拓扑路径的分析。
+	</p>
 
-		<p>
-			在真实的三维空间分析的基础上，我们还引入了单行道的概念。单行道的 Gate 的位置，以及通行方向，都是建模人员手工指定的，可以确保分析模型与生活实际，能够精确地对应得上。
-		</p>
+	<p>
+	  在真实的三维空间分析的基础上，我们还引入了单行道的概念。单行道的 Gate 的位置，以及通行方向，都是建模人员手工指定的，可以确保分析模型与生活实际，能够精确地对应得上。
+	</p>
 
-		<p>
-			在计算机科学中，有 sp 的概念与 ksp 的概念。所谓 sp 的概念，就是计算结果返回的是一条最短路径。所谓 ksp 的概念，就是计算结果返回的是前 k 个最短路径。建筑学当中，最短路径往往并不具有绝对的意义。人们可能因为各种影响因素而偏离最短路径。前 k 个最短路径如果都纳入考虑范围的话，更合适一些。
-		</p>
+	<p>
+	  在计算机科学中，有 sp 的概念与 ksp 的概念。所谓 sp 的概念，就是计算结果返回的是一条最短路径。所谓 ksp 的概念，就是计算结果返回的是前 k 个最短路径。建筑学当中，最短路径往往并不具有绝对的意义。人们可能因为各种影响因素而偏离最短路径。前 k 个最短路径如果都纳入考虑范围的话，更合适一些。
+	</p>
 
-		<p>
-			DepthSpace 中，允许用户自定义 k 值。在重要的工程项目中，k 值设置得高一些，能充分揭示空间系统的内在规律，比过去的单值反馈更有价值。
-		</p>
+	<p>
+	  DepthSpace 中，允许用户自定义 k 值。在重要的工程项目中，k 值设置得高一些，能充分揭示空间系统的内在规律，比过去的单值反馈更有价值。
+	</p>
 
-		<p>
-			（点击下图查看 tsp 示例）
-		</p>
-	</div>
-	<div class='ds-section'>
-		<h1>
-			创新算法 － Metric Shortest Path
-		</h1>
-		<p>
-			DepthSpace 当中提供的最短米制距离的算法，也包含单行道设定，也提供 sp 或 ksp 的反馈结果。
-		</p>
-		<p>
-			（点击下图查看 msp 示例）
-		</p>
-	</div>
-	<div class='ds-section'>
-		<h1>
-			创新算法 － 可视面积占比
-		</h1>
-		<p>
-		</p>
-	</div>
+	<p>
+	  （点击下图查看 tsp 示例）
+	</p>
+  </div>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － Metric Shortest Path
+	</h1>
+	<p>
+	  DepthSpace 当中提供的最短米制距离的算法，也包含单行道设定，也提供 sp 或 ksp 的反馈结果。
+	</p>
+	<p>
+	  （点击下图查看 msp 示例）
+	</p>
+  </div>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － 可视面积占比
+	</h1>
+	<p>
+	</p>
+  </div>
 
-	<div class='ds-section'>
-		<h1>
-			创新算法 － 可视体积
-		</h1>
-		<p>
-		</p>
-	</div>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － 可视体积
+	</h1>
+	<p>
+	</p>
+  </div>
 
-	<div class='ds-section'>
-		<h1>
-			创新算法 － Information Registration 插件
-		</h1>
-		<p>
-		</p>
-	</div>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － Information Registration 插件
+	</h1>
+	<p>
+	</p>
+  </div>
 
-	<div class='ds-section'>
-		<h1>
-			创新算法 － Line Mark 算法
-		</h1>
-		<p>
-		</p>
-	</div>
+  <div class='ds-section'>
+	<h1>
+	  创新算法 － Line Mark 算法
+	</h1>
+	<p>
+	</p>
+  </div>
 </div>
