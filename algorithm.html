@@ -1,123 +1,215 @@
 <div class='container ds-algorithm'>
   <div class='ds-section'>
-	<h1>
-	  创新算法 － View in 和 View out
-	</h1> 
-	
-	<p>
-	  (对应模型为 test-20170810-01.3dm)
-	</p>
-	
-	<p>
-	  在 DepthMap 那个阶段，曾经有 Visual Connectivity 的概念。就是考察点与点之间，是否被物体隔开。没有隔开的话，认为是视线可见。DepthMap 是二维空间分析，没什么意思。
-	</p>
+    <h1>
+      View In 和 View Out
+    </h1>
+    <p>
+      (对应模型为 test-20170810-01.3dm)
+    </p>
+    
+    <p>
+      该算法是基于点阵的。用点阵去代表空间。点被定义为两类，一类是Reach-able Space,另一类是Boundary Representation。
+    </p>
 
-	<p>
-	  后来日本那边有人写了论文，提出了 View and Viewed Analysis，尝试往三维空间分析的方向发展，但那个论文只有 paper 没有软件，数据怎么来的，也验证不了。看着来气。
-	</p>
-	
-	<p>
-	  后来，2016 年春节前后，深圳大学王浩锋教授，联合美国的 Piponis 教授，提出，把建筑空间，分为 occupied space，和 observed space 两类。我觉得这种叫法确实更好一点，在新版的空间句法简明教程中，对这种概念进行了剖析。
-	</p>
+    <p>
+      分为两类点的意思，是定义视线用的。REAS（即reachable space缩写）点，可以发射视线，也可接收视线。BREP（即Boundary Representation缩写）点，不能发射视线，只能接收视线。
+    </p>
+    
+    <p>
+      假设研究的目标是一个公园，那么人行道上面布的点，应该定义它为REAS点，而湖面上的点，应该定义它为BREP点。
+    </p>
 
-	<p>
-	  在这些前期工作的基础上，在 DepthSapce 当中，我决定转而使用 Reach-able Space 和 Boundary Representation两个概念。Reach-able Space就是人可以到达的空间。Boundary Representation 是计算机科学当中的术语，Grasshopper 中，不是有个电池叫 Brep 吗，就是这个 Boundary Representation 的缩写，就是代表可以被看到的物体。
-	</p>
+    <p>
+      View In算法反馈的值，被称为vid值，也就是view in degree。这个vid值越高，表示被看到的次数越多。
+    </p>
 
-	<p>
-	  建筑师可以在空间中布置点阵，REAS 点表示人可以到达的空间。BREP 点表示只能被看却无法到达的空间。如公园当中，人行道上的点可以被定义为 REAS 点，人行道旁边有个湖面，湖面上可以布置 BREP 点。
-	</p>
+    <p>
+      View Out算法反馈的值，被称为vod值，也就是view out degree。这个vod值越高，表示向外观察看到的其他点越多。
+    </p>
 
-	<p>
-	  只有 REAS 点可以发出视线。REAS 点和 BREP 点都可以接收视线。
-	</p>
+    <p>
+      根据算法的定义，REAS点的头上，既有vid值，也有vod值。而BREP点，只提供vid值,在vod那里面查看,BREP点的vod值都是-1。
+    </p>
 
-	<p>
-	  在此基础上就可以进行视线分析了。
-	</p>
+    <p>
+      点击下图查看 View In 示例
+    </p>
 
-	<p>
-	  由于要考虑半透明物体的遮挡的问题，每个视线权重为 100，被半透明物体遮挡后，权重值下降。
-	</p>
+    <p>
+      点击下图查看 View Out 示例
+    </p>
+  </div>
+  <div class='ds-section'>
+    <h1>
+      Topological Shortest Path
+    </h1>
 
-	<p>
-	  一条视线，是有方向的，起点与终点都可以从这条线继承权重值。假设全局计算结束后，一条视线的权重值为 65，那么这条视线的起点，它的 View out degree 属性，也就是 vod值，就加上 65。这条视线的终点，它的 View in degree 属性，也就是 vid 值，也加上 65。由于 REAS 点和 BREP 点是分开定义的，那么 vid 值和 vod 值就有了精确的建筑学的意义。
-	</p>
+    <p>
+      在REAS点的范围内，求解最短拓扑路径。
+    </p>
 
-	<p>
-	  （点击下图查看 vid 示例）
-	</p>
+    <p>
+      该算法有sp 和 ksp之分。sp就是最短路径，ksp就是前k个最短路径。
+    </p>
 
-	<p>
-	  （点击下图查看 vod 示例）
-	</p>
+    <p>
+      建筑学当中，人对于路径的选择并不绝对，单纯的sp没啥意思，而稍微比最短路径绕远一点点，又有趣味的路径，可能更加吸引人。
+    </p>
+
+    <p>
+      前k个最短路径，这个k值，最大允许用户自定义到20。
+    </p>
+
+    <p>
+      假设用户设定 k=7，DepthSpace将会返回一个“TSP7”的计算结果。
+    </p>
+
+    <p>
+      在DepthSpace当中，我们在真实三维模型的基础上，增加了单行道的定义。这是其他软件从未提供过的功能。
+    </p>
+
+    <p>
+      在单行道的基础上，我们可以变通一下，将这个算法用于研究地铁站一类的案例。国内许多地铁站的设计，从街道层下去的时候，无自动扶梯。从轨道层上来的时候，有自动扶梯。虽然共用空间，但方向不同，路径的权重值不同。可以用类似单行道的算法，把这个权重值赋予进去。在精确控制路径权重值的基础上，再来比较哪条路径是shortest path，这个显然更加贴合建筑学的要求。
+    </p>
+
+    <p>
+      每个点的头上，记着的这个TSP的值，都是这个点出现在最短拓扑路径上的次数。
+    </p>
+
+    <p>
+      点击下图查看 TSP 示例
+    </p>
+
+  </div>
+
+
+  <div class='ds-section'>
+    <h1>
+      Metric Shortest Path
+    </h1>
+    <p>
+      Metric SP 的算法，与Topological SP的算法一样，也是只有 REAS点参与计算。
+    </p>
+    <p>
+      该算法也有sp 和 ksp之分。最大允许用户自定义到 k=20。
+    </p>
+    <p>
+      假设用户设定 k=13, DepthSpace将会返回一个“MSP13”的计算结果。
+    </p>
+    <p>
+      Metric SP也支持真实的单行道定义。也可以将单行道的算法变通一下，用于为路径的返回值赋予权重。例如，机场当中为了方便旅客找到登机口，往往提供水平方向的自动扶梯。乘坐该扶梯的情况下，旅客在水平方向实际运动了50米，但并不消耗体力。可以通过设定权重，这50米的数值不参与加总。
+    </p>
+    <p>
+      也可以设定这段扶梯等效于旅客步行10米。这也是可以设定的。
+    </p>
+    <p>
+      由于我们一开始建模的时候就是真实三维空间，那么也可以把高差考虑进来。假设有个上下楼的楼梯，实际走动的距离是10米，通过设定权重，可以使得软件认为，下楼时候走动的米制距离是3米，上楼时候走动的距离是20米。假设这个楼梯旁边有个电梯，这个电梯认为沿着高度方向运动，那么坐电梯不论走几层，都是走动了0米，这样的话，上下楼的时候，Metric SP当然更可能通过电梯。
+    </p>
+    <p>
+      通过DepthSpace提供的考虑单行道和高差的算法，在最短米制距离开始计算之前，这个场景的设定，可以高度贴合建筑学的实际情况，将来给出的计算结果将会很有说服力。
+    </p>
+
+    <p>
+      点击下图查看 MSP 示例
+
+    </p>
   </div>
 
   <div class='ds-section'>
-	<h1>
-	  创新算法 － Topological Shortest Path
-	</h1>
+    <h1>
+      TSP through Interesting Range
+    </h1>
+    <p>
+      在建筑学的研究当中，直观地就能看到，有些空间与其他空间不一样。这些重要的空间可以被称为 Interesting Range，也就是趣味中心。Interesting Range在一个单独的建筑物中，数量肯定是非常有限的。
+    </p>
+    <p>
+      用户可以手工指定，某些REAS点为 Interesting Range点。或者，以vod的值为依据，选取系统当中排名前百分之多少的点进入IR的范围。有了IR定义之后，就是强制所有路径必须途经IR点。所有路径都必须绕经趣味中心。这样的路径本身就具有建筑学上的意义。如果一个点，本身不是Interesting Range点，而它经常出现在 TSP through Interesting Range的半路上，那么这个点本身也就有意思了。这个点代表的空间，在系统当中将会具有某种重要性。
+    </p>
+    <p>
+      有了TSP through Interesting Range的概念之后，我们还提供 MSP through Interesting Range的算法，意思也是强行绕行IR点，再求最短米制路径。
+    </p>
+    <p>
 
-	<p>
-	  扑意义上的最短路径。只有 REAS 点参与最短拓扑路径的分析。
-	</p>
+      点击下图查看 TSPtIR 示例
 
-	<p>
-	  在真实的三维空间分析的基础上，我们还引入了单行道的概念。单行道的 Gate 的位置，以及通行方向，都是建模人员手工指定的，可以确保分析模型与生活实际，能够精确地对应得上。
-	</p>
 
-	<p>
-	  在计算机科学中，有 sp 的概念与 ksp 的概念。所谓 sp 的概念，就是计算结果返回的是一条最短路径。所谓 ksp 的概念，就是计算结果返回的是前 k 个最短路径。建筑学当中，最短路径往往并不具有绝对的意义。人们可能因为各种影响因素而偏离最短路径。前 k 个最短路径如果都纳入考虑范围的话，更合适一些。
-	</p>
-
-	<p>
-	  DepthSpace 中，允许用户自定义 k 值。在重要的工程项目中，k 值设置得高一些，能充分揭示空间系统的内在规律，比过去的单值反馈更有价值。
-	</p>
-
-	<p>
-	  （点击下图查看 tsp 示例）
-	</p>
-  </div>
-  <div class='ds-section'>
-	<h1>
-	  创新算法 － Metric Shortest Path
-	</h1>
-	<p>
-	  DepthSpace 当中提供的最短米制距离的算法，也包含单行道设定，也提供 sp 或 ksp 的反馈结果。
-	</p>
-	<p>
-	  （点击下图查看 msp 示例）
-	</p>
-  </div>
-  <div class='ds-section'>
-	<h1>
-	  创新算法 － 可视面积占比
-	</h1>
-	<p>
-	</p>
+    </p>
   </div>
 
-  <div class='ds-section'>
-	<h1>
-	  创新算法 － 可视体积
-	</h1>
-	<p>
-	</p>
-  </div>
 
   <div class='ds-section'>
-	<h1>
-	  创新算法 － Information Registration 插件
-	</h1>
-	<p>
-	</p>
+    <h1>
+      Visual Area by percentage
+    </h1>
+    <p>
+      参与该算法的都是REAS点。
+    </p>
+    <p>
+      以一个点为中心，创建一个球体。以这个球体的表面，为假想的人的视野范围。所有的建筑物，只要没有被遮挡，都能够在该球体上有个投影。这个投影具体是多大的面积，这个数值可以与球面的总面积进行个比较。这个百分比的值，有意义。
+    </p>
+    <p>
+      可视面积占球面面积的比值越大，表示这个物体在人的视野当中越醒目。
+    </p>
+    <p>
+      我们还可以为建筑物赋予权重，假设一般的墙面权重为1，而户外播放广告的那种巨大的LED广告屏，权重为2，这样就可以把建筑物的具体情况考虑进来。
+    </p>
+    <p>
+      甚至，我们可以为物体表面进行贴图，贴个灰度图，这样赋予权重值的时候，按照灰度值变化。
+    </p>
+    <p>
+      将VA%算法与View Out算法做比较，还是View Out的隐患比较大，因为，手工布置的点，点多了vod值就高，点少了vod值就低，容易人为地造成偏差。VA%是依据原始建筑物模型来的，顶多是球体的设置与人眼实际看到的视野，不太搭配，造成一些偏差。球体的半径到底取多大，经过一定的经验积累，我们将会找到范围，作为软件的默认值，推荐给用户。当下，VA%的球体半径，还是允许用户自定义的状态。
+    </p>
+    <p>
+
+      点击下图查看 VA% 示例
+
+    </p>
   </div>
 
+
   <div class='ds-section'>
-	<h1>
-	  创新算法 － Line Mark 算法
-	</h1>
-	<p>
-	</p>
+    <h1>
+      Visual Volumn
+    </h1>
+    <p>
+      这个算法，是基于REAS点，考察可视体积。
+    </p>
+    <p>
+      可视体积的算法，在建筑学上具有独特的价值。典型的如建筑物的中庭，这类空间，显然是可视体积更有价值。
+    </p>
+    <p>
+      可视体积，可以理解为带有空间深度信息的可视面积。
+    </p>
+    <p>
+      从一个点向外看去，可视体积越大，表示这个建筑空间越宏伟。这是把数值记在点的头上。这是Visual Volumn out degree的计算结果。
+    </p>
+    <p>
+      如果以一个墙体为衡量标准，它出现在不同的REAS点的视野当中，如果历次被看到的情形中，Visual Volumn的值都反馈回来，记在墙体的头上，这就是Visual Volumn in degree。
+    </p>
+    <p>
+      VVod和VVid，将会提供前所未见的洞察力。
+    </p>
+    <p>
+
+      点击下图查看 VVod 示例
+    </p>
+    <p>
+
+      点击下图查看 VVid 示例
+    </p>
+  </div>
+
+
+  <div class='ds-section'>
+    <h1>
+      其他算法
+    </h1>
+    <p>
+      除了上述基础算法之外，我们还提供一些DepthMap时期就存在的算法，当然算法是经过详细研究之后，彻底重写的。如Visual Connectivity, Visual Step Depth, Mean Topological Depth(for REAS), Mean Visual Topological Depth(for REAS and BREP),Mean Metric Depth, Mean Visual Metric Depth, Visual Integration[HH]，Visual Control, Visual Controlability, Visual Entropy, Visual Clustering Coefficient(for REAS or for Surface),等算法。
+    </p>
+    <p>
+      除此之外，我们还开发了简易的GIS系统，直接能够把调研信息登记到建筑模型里面去。如果建模人员使用的是Rhino 的话，那么建模和调查信息录入可以同时进行。我们的GIS系统是基于公有云上跑的数据库的，允许多人同时操作同一个建筑模型，理论上无论多少人同时工作都可以满足。这样的服务能力，是之前任何GIS系统所不具备的。
+
+    </p>
   </div>
 </div>
