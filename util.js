@@ -13,9 +13,9 @@ if (typeof String.prototype.endsWith != 'function') {
 }
 
 function csrf_cookie_header(){
-    function trim(s){
-　　    return s.replace(/(^\s*)|(\s*$)/g, "");
-　　}
+	function trim(s){
+		return s.replace(/(^\s*)|(\s*$)/g, "");
+	}
 
     function getCookie(name) {
         var cookieValue = null;

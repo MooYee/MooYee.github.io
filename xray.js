@@ -1,4 +1,4 @@
-function XRay(){
+function XRay(dataUrl){
 	this.withFloor = false;
 	this.withAxes = true;
 	this.pointType = 'point';
@@ -15,7 +15,7 @@ function XRay(){
 	this.userZoomSpeed = 1.0;
 	
 	this.frameInterval = 2000;
-
+	this.dataUrl = dataUrl;
 	this.init();
 }
 
@@ -88,7 +88,7 @@ XRay.prototype.loadData = function(){
 		self.onLoadData(data);
 	};
 	var self = this;
-	var data_url = 'data/' + self.getUrlParam('data')+".js";
+	var data_url = 'data/' + this.dataUrl+".js";
 	$.getScript(data_url);
 };
 
@@ -403,8 +403,8 @@ XRay.prototype.initThree = function(){
 	this.scene = new THREE.Scene();
 
 	// set the view size in pixels (custom or according to window size)
-	// var SCREEN_WIDTH = 400, SCREEN_HEIGHT = 300;
-	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var SCREEN_WIDTH = 1170, SCREEN_HEIGHT = 500;
+	// var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 	// camera attributes
 	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = self.mm*20;
 	// set up camera
@@ -415,11 +415,11 @@ XRay.prototype.initThree = function(){
 	// 	so pull it back (z = 400) and up (y = 100) and set the angle towards the scene origin
 	this.camera.position.set(this.mm*this.mscale, this.mm*this.mscale, this.mm*this.mscale);
 	this.camera.lookAt(this.scene.position);
-
+	
 	// create and start the renderer; choose antialias setting.
 	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 	this.renderer.setPixelRatio( window.devicePixelRatio );
-	this.renderer.setSize( window.innerWidth, window.innerHeight );
+	this.renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 	this.renderer.gammaInput = true;
 	this.renderer.gammaOutput = true;
 	this.renderer.shadowMap.enabled = true;
@@ -493,7 +493,7 @@ XRay.prototype.initThree = function(){
 		self.pointsCloud.vertices.push( vertex );
 	});
 	var material = new THREE.PointsMaterial({
-		size: self.mm / 100 * 3,
+		size: self.mm / 100 * 2,
 		vertexColors: true,
 	});
 	if(this.colorsArr.length > 0){
@@ -614,4 +614,3 @@ XRay.prototype.render = function(){
 }
 
 
-new XRay();

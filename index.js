@@ -14,6 +14,18 @@ depthspace.config(['$routeProvider', '$locationProvider', '$sceProvider', functi
         templateUrl: 'algorithm.html',
         controller: 'BlankCtl'
     })
+    .when('/vid-demo', {
+        templateUrl: 'vid-demo.html',
+        controller: 'VidDemoCtrl'
+    })
+    .when('/vod-demo', {
+        templateUrl: 'vod-demo.html',
+        controller: 'VodDemoCtrl'
+    })
+    .when('/tsp-demo', {
+        templateUrl: 'tsp-demo.html',
+        controller: 'TspDemoCtrl'
+    })
     .otherwise({
         redirectTo: '/home'
     });
@@ -183,4 +195,16 @@ depthspace.controller('HomeCtl',function($scope, $http, $location) {
 
 
 depthspace.controller('BlankCtl',function($scope, $http, $location) {
+});
+
+depthspace.controller('VidDemoCtrl',function($scope, $http, $location) {
+	$scope.vidDemo = new XRay('vid-demo');
+});
+
+depthspace.controller('VodDemoCtrl',function($scope, $http, $location) {
+	$scope.vidDemo = new XRay('vod-demo');
+});
+
+depthspace.controller('TspDemoCtrl',function($scope, $http, $location) {
+	$scope.vidDemo = new XRay('tsp-demo');
 });
