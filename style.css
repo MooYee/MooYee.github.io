@@ -81,15 +81,15 @@
 	margin-top: 2em;
 }
 
-.demo-container {
+p.demo-container {
 	text-align: center;
 }
 
-.demo-container a {
+p.demo-container a {
 	padding: 20px;
 }
 
-.demo-container img {
+p.demo-container img {
 	width: 400px;
 	height: 400px;
 }
