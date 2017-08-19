@@ -161,9 +161,9 @@ XRay.prototype.exchangeXYZ = function(){
 	this.log('exchange xyz');
 	var self = this;
 	this.forEachAllPoint(function(point){
-		// ½»»» rhino ºÍ Three.js µÄ×ø±êÏµ
-		// rhino: x ÏòÓÒ£¬y ÏòÆÁÄ»ÄÚ£¬zÏòÉÏ
-		// Three.js: x ÏòÓÒ£¬y ÏòÉÏ£¬z ÏòÆÁÄ»
+		// äº¤æ¢ rhino å’Œ Three.js çš„åæ ‡ç³»
+		// rhino: x å‘å³ï¼Œy å‘å±å¹•å†…ï¼Œzå‘ä¸Š
+		// Three.js: x å‘å³ï¼Œy å‘ä¸Šï¼Œz å‘å±å¹•
 		var t = point.y;
 		point.y = point.z;
 		point.z = point.x;
@@ -424,7 +424,7 @@ XRay.prototype.initThree = function(){
 	this.renderer.gammaOutput = true;
 	this.renderer.shadowMap.enabled = true;
 	
-	// ºÚÉ«±³¾°
+	// é»‘è‰²èƒŒæ™¯
 	this.renderer.setClearColor(0x000000);
 	
 	// attach div element to variable to contain the renderer
@@ -452,7 +452,8 @@ XRay.prototype.initThree = function(){
 	// move mouse and: left   click to rotate,
 	//                 middle click to zoom,
 	//                 right  click to pan
-	this.controls = new THREE.TrackballControls(this.camera );
+	// this.controls = new THREE.TrackballControls(this.camera );
+	this.controls = new THREE.OrbitControls(this.camera );
 	this.controls.userPanSpeed = this.userPanSpeed;
 	this.controls.userZoomSpeed = this.userZoomSpeed;
 
