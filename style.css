@@ -81,6 +81,16 @@
 	margin-top: 2em;
 }
 
-A.demo img {
-	border: 1px solid gray;
+.demo-container {
+	text-align: center;
 }
+
+.demo-container a {
+	padding: 20px;
+}
+
+.demo-container img {
+	width: 400px;
+	height: 400px;
+}
+
