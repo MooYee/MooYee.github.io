@@ -5,7 +5,7 @@
 	text-align: center;
 	vertial-align: middle;
 	font-size: 64px;
-	font-family: ΢���ź�;
+	font-family: Î¢ÈíÑÅºÚ;
 	font-weight: bold;
 }
 
@@ -79,4 +79,8 @@
 .ds-algorithm h1, .ds-about h1{
 	border-bottom: 1px solid gray;
 	margin-top: 2em;
+}
+
+A.demo img {
+	border: 1px solid gray;
 }
