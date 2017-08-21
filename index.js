@@ -14,6 +14,10 @@ depthspace.config(['$routeProvider', '$locationProvider', '$sceProvider', functi
         templateUrl: 'algorithm.html',
         controller: 'BlankCtl'
     })
+    .when('/security', {
+        templateUrl: 'security.html',
+        controller: 'BlankCtl'
+    })
     .when('/vid-demo', {
         templateUrl: 'vid-demo.html',
         controller: 'VidDemoCtrl'
