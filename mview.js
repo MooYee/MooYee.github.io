@@ -222,7 +222,7 @@ XRay.prototype.getMaxXYZ = function(){
     self.mm = Math.max(self.dx, self.dy, self.dz);
     self.log('mm:' + self.mm);
 
-    this.userPanSpeed = self.mm * 10.0 / 1280;
+    this.userPanSpeed = self.mm * 50.0 / 1280;
     this.userZoomSpeed = self.mm * 1.0 / 1280 / 2;
 };
 
