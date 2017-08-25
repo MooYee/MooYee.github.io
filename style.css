@@ -96,3 +96,7 @@ p.demo-container a {
 .enabled span {
     text-decoration: none;
 }
+
+.ds-num {
+    width: 100px;
+}
