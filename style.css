@@ -1,23 +1,23 @@
 .ds-slide {
-	height: 500px;
-	background: lightgray;
-	display: table-cell;
-	text-align: center;
-	vertial-align: middle;
-	font-size: 64px;
-	font-family: Î¢ÈíÑÅºÚ;
-	font-weight: bold;
+    height: 500px;
+    background: lightgray;
+    display: table-cell;
+    text-align: center;
+    vertial-align: middle;
+    font-size: 64px;
+    font-family: Î¢ÈíÑÅºÚ;
+    font-weight: bold;
 }
 
 .ds-slide table{
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .ds-mark{
-	color: blue;
-	font-size: 32px;
-	font-family: Comic Sans MS;
+    color: blue;
+    font-size: 32px;
+    font-family: Comic Sans MS;
 }
 
 .footer-section-title{
@@ -26,7 +26,7 @@
 }
 
 .footer-list {
-	padding: 0;
+    padding: 0;
     list-style-type: none;
     margin: 4px 0 0;
 }
@@ -40,15 +40,15 @@
 }
 
 .copyright {
-	margin-top: 20px;
-	color: gray;
-	text-align: right;
-	font-size: 0.5em;
+    margin-top: 20px;
+    color: gray;
+    text-align: right;
+    font-size: 0.5em;
 }
 
 .header-list {
-	margin-top: 60px;
-	text-align: right;
+    margin-top: 60px;
+    text-align: right;
 }
 
 .header-item {
@@ -63,30 +63,36 @@
 }
 
 .ds-about p {
-	text-indent: 2em;
-	padding-top: 1em;
-	font-size: large;
-	text-align: justify;
+    text-indent: 2em;
+    padding-top: 1em;
+    font-size: large;
+    text-align: justify;
 }
 
 .ds-algorithm p {
-	text-indent: 2em;
-	padding-top: 1em;
-	font-size: large;
-	text-align: justify;
+    text-indent: 2em;
+    padding-top: 1em;
+    font-size: large;
+    text-align: justify;
 }
 
 .ds-algorithm h1, .ds-about h1{
-	border-bottom: 1px solid gray;
-	margin-top: 2em;
+    border-bottom: 1px solid gray;
+    margin-top: 2em;
 }
 
 p.demo-container {
-	text-align: center;
+    text-align: center;
 }
 
 p.demo-container a {
-	padding: 20px;
+    padding: 20px;
 }
 
+.disabled span {
+    text-decoration: line-through;
+}
 
+.enabled span {
+    text-decoration: none;
+}

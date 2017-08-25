@@ -2,41 +2,45 @@ agGrid.initialiseAgGridWithAngular1(angular);
 var depthspace = angular.module('depthspace', ['ui.bootstrap', 'ngRoute', 'angularFileUpload', 'agGrid']);
 depthspace.config(['$routeProvider', '$locationProvider', '$sceProvider', function ($routeProvider, $locationProvider, $sceProvider) {
     $routeProvider
-    .when('/home', {
-        templateUrl: 'home.html',
-        controller: 'HomeCtl'
-    })
-    .when('/about', {
-        templateUrl: 'about.html',
-        controller: 'BlankCtl'
-    })
-    .when('/algorithm', {
-        templateUrl: 'algorithm.html',
-        controller: 'BlankCtl'
-    })
-    .when('/security', {
-        templateUrl: 'security.html',
-        controller: 'BlankCtl'
-    })
-    .when('/audit', {
-        templateUrl: 'audit.html',
-        controller: 'BlankCtl'
-    })
-    .when('/vid-demo', {
-        templateUrl: 'vid-demo.html',
-        controller: 'VidDemoCtrl'
-    })
-    .when('/vod-demo', {
-        templateUrl: 'vod-demo.html',
-        controller: 'VodDemoCtrl'
-    })
-    .when('/tsp-demo', {
-        templateUrl: 'tsp-demo.html',
-        controller: 'TspDemoCtrl'
-    })
-    .otherwise({
-        redirectTo: '/home'
-    });
+	.when('/home', {
+            templateUrl: 'home.html',
+            controller: 'HomeCtrl'
+	})
+	.when('/about', {
+            templateUrl: 'about.html',
+            controller: 'BlankCtrl'
+	})
+	.when('/algorithm', {
+            templateUrl: 'algorithm.html',
+            controller: 'BlankCtrl'
+	})
+	.when('/security', {
+            templateUrl: 'security.html',
+            controller: 'BlankCtrl'
+	})
+	.when('/audit', {
+            templateUrl: 'audit.html',
+            controller: 'BlankCtrl'
+	})
+	.when('/query', {
+            templateUrl: 'query.html',
+            controller: 'QueryCtrl'
+	})
+	.when('/vid-demo', {
+            templateUrl: 'vid-demo.html',
+            controller: 'VidDemoCtrl'
+	})
+	.when('/vod-demo', {
+            templateUrl: 'vod-demo.html',
+            controller: 'VodDemoCtrl'
+	})
+	.when('/tsp-demo', {
+            templateUrl: 'tsp-demo.html',
+            controller: 'TspDemoCtrl'
+	})
+	.otherwise({
+            redirectTo: '/home'
+	});
 }]);
 
 depthspace.directive("compareTo", function() {
@@ -192,7 +196,7 @@ depthspace.controller('NavbarCtrl', function ($scope, $location) {
     }
 });
 
-depthspace.controller('HomeCtl',function($scope, $http, $location) {
+depthspace.controller('HomeCtrl',function($scope, $http, $location) {
     need_login($scope, $http, $location, function(){
         $location.path('/class/list');
         $scope.status.done = true;
@@ -202,17 +206,112 @@ depthspace.controller('HomeCtl',function($scope, $http, $location) {
 });
 
 
-depthspace.controller('BlankCtl',function($scope, $http, $location) {
+depthspace.controller('BlankCtrl',function($scope, $http, $location) {
 });
 
 depthspace.controller('VidDemoCtrl',function($scope, $http, $location) {
-	$scope.vidDemo = new XRay('vid-demo');
+    $scope.vidDemo = new XRay('vid-demo');
 });
 
 depthspace.controller('VodDemoCtrl',function($scope, $http, $location) {
-	$scope.vidDemo = new XRay('vod-demo');
+    $scope.vidDemo = new XRay('vod-demo');
 });
 
 depthspace.controller('TspDemoCtrl',function($scope, $http, $location) {
-	$scope.vidDemo = new XRay('tsp-demo');
+    $scope.vidDemo = new XRay('tsp-demo');
+});
+
+depthspace.controller('QueryCtrl',function($scope, $http, $location) {
+    $scope.n_per_1yuan = 10*100000000;
+    $scope.price_min = 20;
+
+    $scope.point_type = 1;
+    $scope.point_num1 = 1000;
+
+    $scope.area = 100;
+    $scope.point_per_m2 = 1000;
+    $scope.point_num2 = $scope.area * $scope.point_per_m2;
+
+    $scope.tri_num = 0;
+    console.log('query ctrl', $scope.point_num);
+    $scope.tri_num = 100;
+
+    $scope.onPointNum1Change = function(){
+	console.log('point num change to:', $scope.point_num1);
+	$scope.onChange();
+    };
+
+    $scope.onAreaChange = function(){
+	console.log('on area change:', $scope.area);
+	$scope.point_num2 = $scope.area * $scope.point_per_m2;
+	$scope.onChange();
+    };
+
+    $scope.onPointPerM2Change = function(){
+	console.log('on point per m2 change:', $scope.point_per_m2);
+	$scope.point_num2 = $scope.area * $scope.point_per_m2;
+	$scope.onChange();
+    };
+
+    $scope.onPointType1Click = function(){
+	$scope.point_type = 1;
+	console.log('point type:', $scope.point_type);
+	$scope.onChange();
+    };
+
+    $scope.onPointType2Click = function(){
+	$scope.point_type = 2;
+	console.log('point type:', $scope.point_type);
+	$scope.onChange();
+    };
+
+    $scope.onChange = function(){
+	var P = 0;
+	if($scope.point_type == 1){
+	    P = $scope.point_num1;
+	}
+	else if($scope.point_type == 2){
+	    P = $scope.point_num2;
+	}
+	var T = $scope.tri_num;
+
+	$scope.price_vid = $scope.getPriceVid(P,T);
+	$scope.price_vod = $scope.getPriceVod(P,T);
+	$scope.price_msp = $scope.getPriceMsp(P,T);
+	$scope.price_tsp = $scope.getPriceTsp(P,T);
+    };
+
+
+    $scope.getPriceVid = function(P, T){
+	var n = P*P*T;
+	console.log(n);
+	var fee = 1.0 * n / $scope.n_per_1yuan;
+	if(fee < $scope.price_min){
+	    fee = $scope.price_min;
+	}
+	fee = Math.ceil(fee);
+	return fee;
+    };
+
+    $scope.getPriceVod = function(P, T){
+	return $scope.getPriceVid(P, T);
+    };
+
+    $scope.getPriceMsp = function(P, T){
+	var n = P*P*T + P*P*P;
+	console.log(n);
+	var fee = 1.0 * n / $scope.n_per_1yuan;
+	if(fee < $scope.price_min){
+	    fee = $scope.price_min;
+	}
+	fee = Math.ceil(fee);
+	return fee;
+    };
+
+    $scope.getPriceTsp = function(P, T){
+	return $scope.getPriceMsp(P, T);
+    };
+
+    $scope.onChange();
+
 });
