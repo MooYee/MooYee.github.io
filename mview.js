@@ -545,7 +545,7 @@ XRay.prototype.initThree = function(){
 	var face = new THREE.Face3( 0, 1, 2, normal);
 	geometry.faces.push( face );
 	var material=new THREE.MeshLambertMaterial({
-	    color:0x555555,
+	    color: 0x333333,
 	    side:THREE.DoubleSide,
 	    transparent: true,
 	    opacity: (1-tri.alpha)*self.globalAlpha,
