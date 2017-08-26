@@ -229,8 +229,8 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
     $scope.point_num1 = 1000;
 
     $scope.area = 100;
-    $scope.point_per_m2 = 1000;
-    $scope.point_num2 = $scope.area * $scope.point_per_m2;
+    $scope.point_per_m2 = 1;
+    $scope.point_num2 = parseFloat($scope.area) * parseFloat($scope.point_per_m2);
 
     $scope.tri_num = 0;
     console.log('query ctrl', $scope.point_num);
@@ -250,6 +250,11 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
     $scope.onPointPerM2Change = function(){
 	console.log('on point per m2 change:', $scope.point_per_m2);
 	$scope.point_num2 = $scope.area * $scope.point_per_m2;
+	$scope.onChange();
+    };
+
+    $scope.onTriNumChange = function() {
+	console.log('on tri numchange:', $scope.tri_num);
 	$scope.onChange();
     };
 

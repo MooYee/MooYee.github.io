@@ -1,133 +1,150 @@
-<div class='container'>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">请输入基础模型信息</h3>
-    </div>
-    <div class="panel-body">
-      <div class="input-group" 
-	   ng-class="{'disabled': point_type == 2, 'enabled': point_type == 1}"
-	   >
-	<span class="input-group-addon" id="basic-addon1">
-	  <input type="radio" name="point_type" aria-label="..." 
-		 ng-click="onPointType1Click()"
-		 ng-checked="point_type == 1"
-		 />
-	</span>
-	<span class="input-group-addon" id="basic-addon1">
-	  点数（人可以到达的范围，用点阵表示）
-	</span>
-	<input type="text" 
-	       class="form-control ds-num" 
-	       placeholder="" 
-	       aria-describedby="basic-addon1"
-	       ng-model="point_num1"
-	       ng-change="onPointNum1Change()"
-	       ng-disabled="point_type == 2"
-	       />
-      </div>
-      <div class="input-group"
-	   ng-class="{'disabled': point_type == 1, 'enabled': point_type == 2}"
-	   >
-	<span class="input-group-addon" id="basic-addon1">
-	  <input type="radio" 
-		 name="point_type" 
-		 aria-label="..." 
-		 ng-click="onPointType2Click()"
-		 ng-checked="point_type == 2"
-		 />
-	</span>
-	<span class="input-group-addon" id="basic-addon1">
-	  研究范围内的建筑面积
-	</span>
-	<input type="text" 
-	       class="form-control ds-num" 
-	       placeholder="" 
-	       aria-describedby="basic-addon1"
-	       ng-model="area"
-	       ng-change="onAreaChange()"
-	       ng-disabled="point_type == 1"
-	       />
-	<span class="input-group-addon" id="basic-addon1">
-	  每平方米布置几个点：
-	</span>
-	<input type="text" 
-	       class="form-control ds-num" 
-	       placeholder="" 
-	       aria-describedby="basic-addon1"
-	       ng-model="point_per_m2"
-	       ng-change="onPointPerM2Change()"
-	       ng-disabled="point_type == 1"
-	       />
-	<span class="input-group-addon" id="basic-addon1">
-	  根据上述面积信息转换，约等于点数
-	</span>
-	<span
-	       class="form-control ds-num" 
-	       placeholder="" 
-	       ng-readonly = true
-	       aria-describedby="basic-addon1"
-	       ng-bind="point_num2"
-	       />
-      </div>
-      <div class="input-group">
-	<span class="input-group-addon" id="basic-addon1">
-	  面数
-	</span>
-	<input type="text" 
-	       class="form-control" 
-	       placeholder=""
-	       aria-describedby="basic-addon1"
-	       ng-model="tri_num"
-	       />
-      </div>
-      <div>
-	（Rhino 中查询模型面数的方法：SELALL 命令选中所有物体，EXPLODE 命令炸开，SELSRF
-	命令选择面物体，可以在命令行看到模型中的总面数）
-      </div>
-    </div>
-  </div>
+<div class='container ds-query'>
+  <div class='ds-section'>
+    <h1>
+      服务状态查询
+    </h1>
+    <form role="form" name="myForm" class="form-horizontal" novalidate>
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <h3 class="panel-title">请输入基础模型信息</h3>
+	</div>
+	<div class="panel-body">
+	  <div class="input-group" 
+	       ng-class="{'disabled': point_type == 2, 'enabled': point_type == 1}"
+	       >
+	    <span class="input-group-addon" id="basic-addon1">
+	      <input type="radio" name="point_type" aria-label="..." 
+		     ng-click="onPointType1Click()"
+		     ng-checked="point_type == 1"
+		     />
+	    </span>
+	    <span class="input-group-addon" id="basic-addon1">
+	      点数（人可以到达的范围，用点阵表示）
+	    </span>
+	    <input type="text" 
+		   class="form-control ds-num" 
+		   placeholder="" 
+		   aria-describedby="basic-addon1"
+		   ng-model="point_num1"
+		   ng-change="onPointNum1Change()"
+		   ng-disabled="point_type == 2"
+		   />
+	  </div>
+	  <div class="input-group"
+	       ng-class="{'disabled': point_type == 1, 'enabled': point_type == 2}"
+	       >
+	    <span class="input-group-addon" id="basic-addon1">
+	      <input type="radio" 
+		     name="point_type" 
+		     aria-label="..." 
+		     ng-click="onPointType2Click()"
+		     ng-checked="point_type == 2"
+		     />
+	    </span>
+	    <span class="input-group-addon" id="basic-addon1">
+	      研究范围内的建筑面积
+	    </span>
+	    <input type="text" 
+		   class="form-control ds-num" 
+		   placeholder="" 
+		   aria-describedby="basic-addon1"
+		   ng-model="area"
+		   ng-change="onAreaChange()"
+		   ng-disabled="point_type == 1"
+		   />
+	    <span class="input-group-addon" id="basic-addon1">
+	      每平方米布置几个点：
+	      <span
+		class="alert"
+		ng-show="myForm.point_per_m2.$dirty && !myForm.point_per_m2.$valid">
+		请输入0.1~4之间数值
+	      </span>
 
-  <div class="panel panel-default">
-    <table class="table">
-      <thead>
-	<tr>
-	  <th>算法名</th>
-	  <th>服务器版本号</th>
-	  <th>服务状态</th>
-	  <th>官方代做</th>
-	  <th>基准报价</th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr>
-	  <td>VID</td>
-	  <td></td>
-	  <td></td>
-	  <td></td>
-	  <td ng-bind='price_vid'></td>
-	</tr>
-	<tr>
-	  <td>VOD</td>
-	  <td></td>
-	  <td></td>
-	  <td></td>
-	  <td ng-bind='price_vod'></td>
-	</tr>
-	<tr>
-	  <td>MSP</td>
-	  <td></td>
-	  <td></td>
-	  <td></td>
-	  <td ng-bind='price_msp'></td>
-	</tr>
-	<tr>
-	  <td>TSP</td>
-	  <td></td>
-	  <td></td>
-	  <td></td>
-	  <td ng-bind='price_tsp'></td>
-	</tr>
-      </tbody>
-    </table>
+	    </span>
+	    <input type="text"
+		   name="point_per_m2"
+		   id="point_per_m2"
+		   class="form-control ds-num" 
+		   placeholder="" 
+		   aria-describedby="basic-addon1"
+		   ng-model="point_per_m2"
+		   ng-pattern="/^(0\.[0-9]|[1234])$/"
+		   ng-change="onPointPerM2Change()"
+		   ng-disabled="point_type == 1"
+		   />
+	    <span class="input-group-addon" id="basic-addon1">
+	      根据上述面积信息转换，约等于点数
+	    </span>
+	    <span
+	      class="form-control ds-num" 
+	      placeholder="" 
+	      ng-readonly = true
+	      aria-describedby="basic-addon1"
+	      ng-bind="point_num2"
+	      />
+	  </div>
+	  <div class="input-group">
+	    <span class="input-group-addon" id="basic-addon1">
+	      面数
+	    </span>
+	    <input type="text" 
+		   class="form-control" 
+		   placeholder=""
+		   aria-describedby="basic-addon1"
+		   ng-model="tri_num"
+		   ng-change="onTriNumChange()"
+		   />
+	  </div>
+	  <div>
+	    （Rhino 中查询模型面数的方法：SELALL 命令选中所有物体，EXPLODE 命令炸开，SELSRF
+	    命令选择面物体，可以在命令行看到模型中的总面数）
+	  </div>
+	</div>
+      </div>
+
+      <div class="panel panel-default">
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th>算法名</th>
+	      <th>服务器版本号</th>
+	      <th>服务状态</th>
+	      <th>官方代做</th>
+	      <th>基准报价</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td>VID</td>
+	      <td></td>
+	      <td></td>
+	      <td></td>
+	      <td ng-bind='price_vid'></td>
+	    </tr>
+	    <tr>
+	      <td>VOD</td>
+	      <td></td>
+	      <td></td>
+	      <td></td>
+	      <td ng-bind='price_vod'></td>
+	    </tr>
+	    <tr>
+	      <td>MSP</td>
+	      <td></td>
+	      <td></td>
+	      <td></td>
+	      <td ng-bind='price_msp'></td>
+	    </tr>
+	    <tr>
+	      <td>TSP</td>
+	      <td></td>
+	      <td></td>
+	      <td></td>
+	      <td ng-bind='price_tsp'></td>
+	    </tr>
+	  </tbody>
+	</table>
+      </div>
+    </form>
   </div>
 </div>
