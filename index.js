@@ -2,6 +2,10 @@ agGrid.initialiseAgGridWithAngular1(angular);
 var depthspace = angular.module('depthspace', ['ui.bootstrap', 'ngRoute', 'angularFileUpload', 'agGrid']);
 depthspace.config(['$routeProvider', '$locationProvider', '$sceProvider', function ($routeProvider, $locationProvider, $sceProvider) {
     $routeProvider
+	.when('/constructing', {
+            templateUrl: 'constructing.html',
+            controller: 'BlankCtrl'
+	})
 	.when('/home', {
             templateUrl: 'home.html',
             controller: 'HomeCtrl'
