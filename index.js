@@ -223,7 +223,8 @@ depthspace.controller('TspDemoCtrl',function($scope, $http, $location) {
 
 depthspace.controller('QueryCtrl',function($scope, $http, $location) {
     $scope.n_per_1yuan = 10*100000000;
-    $scope.price_min = 20;
+    $scope.price_min = 100;
+    $scope.price_max = 10000;
 
     $scope.point_type = 1;
     $scope.point_num1 = 1000;
@@ -235,36 +236,71 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
     $scope.tri_num = 100;
 
 
-    var alg = function(name, price){
+    var alg = function(name, price, f){
 	return {
 	    'name': name,
-	    'price': price
+	    'price': price,
+	    'f': f,
 	}
     };
 
     $scope.algorithmArr = [];
 
-    var append_alg = function(name){
-	$scope.algorithmArr.push(alg(name, 0));
+    var append_alg = function(name, f){
+	$scope.algorithmArr.push(alg(name, 0, f));
     };
 
-    append_alg('VID');
-    append_alg('VOD');
-    append_alg('MSP');
-    append_alg('TSP');
-    append_alg('TSP through IR');
-    append_alg('MSP through IR');
-    append_alg('VA%');
-    append_alg('VVod');
-    append_alg('VVid');
-    append_alg('VConnectivity');
-    append_alg('VIntegration[HH]');
-    append_alg('VControl');
-    append_alg('VControlability');
-    append_alg('VEntropy');
-    append_alg('VClusteringCoefficient');
-    append_alg('DepthMap数据提取到DepthSpace');
-    append_alg('其他GIS功能');
+    append_alg('VID', function(P,T){
+	return $scope.getPriceVid(P,T);
+    });
+    append_alg('VOD', function(P,T){
+	return $scope.getPriceVod(P,T);
+    });
+    append_alg('MSP', function(P,T){
+	return $scope.getPriceMsp(P,T);
+    });
+    append_alg('TSP', function(P,T){
+	return $scope.getPriceTsp(P,T);
+    });
+    append_alg('MSP through IR', function(P,T){
+	return 0;
+    });
+    append_alg('TSP through IR', function(P,T){
+	return 0;
+    });
+    append_alg('VA%', function(P,T){
+	return 0;
+    });
+    append_alg('VVod', function(P,T){
+	return 0;
+    });
+    append_alg('VVid', function(P,T){
+	return 0;
+    });
+    append_alg('VConnectivity', function(P,T){
+	return 0;
+    });
+    append_alg('VIntegration[HH]', function(P,T){
+	return 0;
+    });
+    append_alg('VControl', function(P,T){
+	return 0;
+    });
+    append_alg('VControlability', function(P,T){
+	return 0;
+    });
+    append_alg('VEntropy', function(P,T){
+	return 0;
+    });
+    append_alg('VClusteringCoefficient', function(P,T){
+	return 0;
+    });
+    append_alg('DepthMap数据提取到DepthSpace', function(P,T){
+	return 0;
+    });
+    append_alg('其他GIS功能', function(P,T){
+	return 0;
+    });
 
     $scope.onPointNum1Change = function(){
 	console.log('point num change to:', $scope.point_num1);
@@ -302,6 +338,7 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 
     $scope.onChange = function(){
 	var P = 0;
+	
 	if($scope.point_type == 1){
 	    P = $scope.point_num1;
 	}
@@ -309,6 +346,18 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 	    P = $scope.point_num2;
 	}
 	var T = $scope.tri_num;
+
+	angular.forEach($scope.algorithmArr, function(alg,index,arr){
+	    var price = alg.f(P, T);
+	    if(price < $scope.price_min){
+		price = $scope.price_min;
+	    }
+	    if(price > $scope.price_max){
+		price = '>' + $scope.price_max;
+	    }
+	    alg.price = price;
+	    console.log(alg.name, ':', alg.price);
+	});
     };
 
 
@@ -316,9 +365,6 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 	var n = P*P*T;
 	console.log(n);
 	var fee = 1.0 * n / $scope.n_per_1yuan;
-	if(fee < $scope.price_min){
-	    fee = $scope.price_min;
-	}
 	fee = Math.ceil(fee);
 	return fee;
     };
@@ -331,9 +377,6 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 	var n = P*P*T + P*P*P;
 	console.log(n);
 	var fee = 1.0 * n / $scope.n_per_1yuan;
-	if(fee < $scope.price_min){
-	    fee = $scope.price_min;
-	}
 	fee = Math.ceil(fee);
 	return fee;
     };
