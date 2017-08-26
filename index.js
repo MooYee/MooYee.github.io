@@ -232,9 +232,39 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
     $scope.point_per_m2 = 1;
     $scope.point_num2 = parseFloat($scope.area) * parseFloat($scope.point_per_m2);
 
-    $scope.tri_num = 0;
-    console.log('query ctrl', $scope.point_num);
     $scope.tri_num = 100;
+
+
+    var alg = function(name, price){
+	return {
+	    'name': name,
+	    'price': price
+	}
+    };
+
+    $scope.algorithmArr = [];
+
+    var append_alg = function(name){
+	$scope.algorithmArr.push(alg(name, 0));
+    };
+
+    append_alg('VID');
+    append_alg('VOD');
+    append_alg('MSP');
+    append_alg('TSP');
+    append_alg('TSP through IR');
+    append_alg('MSP through IR');
+    append_alg('VA%');
+    append_alg('VVod');
+    append_alg('VVid');
+    append_alg('VConnectivity');
+    append_alg('VIntegration[HH]');
+    append_alg('VControl');
+    append_alg('VControlability');
+    append_alg('VEntropy');
+    append_alg('VClusteringCoefficient');
+    append_alg('DepthMap数据提取到DepthSpace');
+    append_alg('其他GIS功能');
 
     $scope.onPointNum1Change = function(){
 	console.log('point num change to:', $scope.point_num1);
@@ -279,11 +309,6 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 	    P = $scope.point_num2;
 	}
 	var T = $scope.tri_num;
-
-	$scope.price_vid = $scope.getPriceVid(P,T);
-	$scope.price_vod = $scope.getPriceVod(P,T);
-	$scope.price_msp = $scope.getPriceMsp(P,T);
-	$scope.price_tsp = $scope.getPriceTsp(P,T);
     };
 
 

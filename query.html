@@ -114,33 +114,12 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td>VID</td>
+	    <tr ng-repeat="alg in algorithmArr">
+	      <td>{{alg.name}}</td>
 	      <td></td>
 	      <td></td>
 	      <td></td>
-	      <td ng-bind='price_vid'></td>
-	    </tr>
-	    <tr>
-	      <td>VOD</td>
-	      <td></td>
-	      <td></td>
-	      <td></td>
-	      <td ng-bind='price_vod'></td>
-	    </tr>
-	    <tr>
-	      <td>MSP</td>
-	      <td></td>
-	      <td></td>
-	      <td></td>
-	      <td ng-bind='price_msp'></td>
-	    </tr>
-	    <tr>
-	      <td>TSP</td>
-	      <td></td>
-	      <td></td>
-	      <td></td>
-	      <td ng-bind='price_tsp'></td>
+	      <td>{{alg.price}}</td>
 	    </tr>
 	  </tbody>
 	</table>
