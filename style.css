@@ -46,9 +46,18 @@
     font-size: 0.5em;
 }
 
+.ds-header {
+    position: relative;
+}
+
 .header-list {
-    margin-top: 60px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
     text-align: right;
+}
+
+.header-list a {
 }
 
 .header-item {
