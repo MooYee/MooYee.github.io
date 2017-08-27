@@ -118,13 +118,32 @@ XRay.prototype.forEachTri = function(cbk){
 XRay.prototype.forEachTriPoint = function(cbk){
     this.log('for each tri point');
     this.forEachTri(function(tri){
-	var i;
-	for(i = 0; i < 3; i++){
-	    var point = tri.ps[i];
-	    cbk(point);
-	}
+	tri.ps.forEach(cbk);
     })
 };
+
+XRay.prototype.forEachGate = function(cbk){
+    this.log('for each gate');
+    if(typeof(this.frame.gate_arr)!='undefined'){
+	this.frame.gate_arr.forEach(cbk);
+    }
+};
+
+XRay.prototype.forEachGateTri = function(cbk){
+    var self = this;
+    this.log('for each gate tri');
+    this.forEachGate(function(gate){
+	gate.tri_arr.forEach(cbk);
+    });
+}
+
+XRay.prototype.forEachGateTriPoint = function(cbk){
+    this.log('for each gate tri point');
+    this.forEachGateTri(function(tri){
+	tri.ps.forEach(cbk);
+    })
+}
+
 
 XRay.prototype.forEachLine = function(cbk){
     if(typeof(this.frame.line_arr)!='undefined'){
@@ -158,6 +177,7 @@ XRay.prototype.forEachMarkPoint = function(cbk){
 XRay.prototype.forEachAllPoint = function(cbk){
     this.forEachPoint(cbk);
     this.forEachTriPoint(cbk);
+    this.forEachGateTriPoint(cbk);
     this.forEachLinePoint(cbk);
     this.forEachMarkPoint(cbk);
 };
@@ -553,6 +573,31 @@ XRay.prototype.initThree = function(){
 	var mesh=new THREE.Mesh(geometry,material);
 	self.scene.add(mesh);
     });
+
+    this.forEachGateTri(function(tri){
+	self.log('gate tri:' + tri);
+	var p1 = new THREE.Vector3(tri.ps[0].x, tri.ps[0].y, tri.ps[0].z);
+	var p2 = new THREE.Vector3(tri.ps[1].x, tri.ps[1].y, tri.ps[1].z);
+	var p3 = new THREE.Vector3(tri.ps[2].x, tri.ps[2].y, tri.ps[2].z)
+	self.log(p1);
+	self.log(p2);
+	self.log(p3);
+	var geometry = new THREE.Geometry();
+	geometry.vertices.push(p1,p2,p3);
+	var normal = new THREE.Vector3( 0, 0, 1 );
+	var face = new THREE.Face3( 0, 1, 2, normal);
+	geometry.faces.push( face );
+	var material=new THREE.MeshLambertMaterial({
+	    color: 0x555555,
+	    side:THREE.DoubleSide,
+	    transparent: true,
+	    opacity: (1-tri.alpha)*self.globalAlpha,
+	});
+	var mesh=new THREE.Mesh(geometry,material);
+	self.scene.add(mesh);
+    });
+
+
 
     this.log('line')
     this.forEachLine(function(line){
