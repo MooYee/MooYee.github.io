@@ -267,43 +267,43 @@ depthspace.controller('QueryCtrl',function($scope, $http, $location) {
 	return $scope.getPriceTsp(P,T);
     });
     append_alg('MSP through IR', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('TSP through IR', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VA%', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VVod', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VVid', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VConnectivity', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VIntegration[HH]', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VControl', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VControlability', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VEntropy', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('VClusteringCoefficient', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('DepthMap数据提取到DepthSpace', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
     append_alg('其他GIS功能', function(P,T){
-	return 0;
+	return $scope.getPriceTsp(P,T);
     });
 
     $scope.onPointNum1Change = function(){
